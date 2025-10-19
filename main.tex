@@ -1,0 +1,416 @@
+\documentclass[10pt, letterpaper]{article}
+
+
+% Packages:
+\usepackage[
+    ignoreheadfoot, % set margins without considering header and footer
+    top=2 cm, % seperation between body and page edge from the top
+    bottom=2 cm, % seperation between body and page edge from the bottom
+    left=2 cm, % seperation between body and page edge from the left
+    right=2 cm, % seperation between body and page edge from the right
+    footskip=1.0 cm, % seperation between body and footer
+    % showframe % for debugging 
+]{geometry} % for adjusting page geometry
+\usepackage[explicit]{titlesec} % for customizing section titles
+\usepackage{tabularx} % for making tables with fixed width columns
+\usepackage{array} % tabularx requires this
+\usepackage[dvipsnames]{xcolor} % for coloring text
+\definecolor{primaryColor}{RGB}{0, 79, 144} % define primary color
+\usepackage{enumitem} % for customizing lists
+\usepackage{fontawesome5} % for using icons
+\usepackage{amsmath} % for math
+\usepackage[
+    pdftitle={Kevin Synagogue Panjaitan's CV},
+    pdfauthor={Kevin Synagogue Panjaitan},
+    pdfcreator={LaTeX with RenderCV},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref} % for links, metadata and bookmarks
+\usepackage[pscoord]{eso-pic} % for floating text on the page
+\usepackage{calc} % for calculating lengths
+\usepackage{bookmark} % for bookmarks
+\usepackage{lastpage} % for getting the total number of pages
+\usepackage{changepage} % for one column entries (adjustwidth environment)
+\usepackage{paracol} % for two and three column entries
+\usepackage{ifthen} % for conditional statements
+\usepackage{needspace} % for avoiding page brake right after the section title
+\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+
+% Ensure that generate pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+\usepackage[default, type1]{sourcesanspro} 
+
+% Beberapa pengaturan:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % hilangkan spasi sebelum environment adjustwidth
+\pagestyle{empty} % tanpa header atau footer default
+\setcounter{secnumdepth}{0} % hilangkan penomoran section
+\setlength{\parindent}{0pt} % hilangkan indentasi paragraf
+\setlength{\topskip}{0pt} % hilangkan top skip
+\setlength{\columnsep}{0.15cm} % atur jarak antar kolom
+
+\makeatletter
+\let\ps@customFooterStyle\ps@plain % salin style plain ke customFooterStyle
+\patchcmd{\ps@customFooterStyle}{\thepage}{
+    \color{gray}\textit{\small Kevin Synagogue Panjaitan -- Halaman \thepage{} dari \pageref*{LastPage}}
+}{}{} % ganti nomor halaman dengan teks yang diinginkan
+\makeatother
+
+\makeatother
+\pagestyle{customFooterStyle}
+
+\titleformat{\section}{
+    % avoid page braking right after the section title
+    \needspace{4\baselineskip}
+    % make the font size of the section title large and color it with the primary color
+    \Large\color{primaryColor}
+}{
+}{
+}{
+    % print bold title, give 0.15 cm space and draw a line of 0.8 pt thickness
+    % from the end of the title to the end of the body
+    \textbf{#1}\hspace{0.15cm}\titlerule[0.8pt]\hspace{-0.1cm}
+}[] % section title formatting
+
+\titlespacing{\section}{
+    % left space:
+    -1pt
+}{
+    % top space:
+    0.3 cm
+}{
+    % bottom space:
+    0.2 cm
+} % section title spacing
+
+% \renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$} % custom bullet points
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights for bullet entries
+
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+} % new environment for one column entries
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for two column entries
+
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{1 cm, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for three column entries
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\color{primaryColor}\linespread{1.5}
+}{
+    \par\kern\topsep
+} % new environment for the header
+
+\newcommand{\placelastupdatedtext}{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
+  \AddToShipoutPictureFG*{% Add <stuff> to current page foreground
+    \put(
+        \LenToUnit{\paperwidth-2 cm-0.2 cm+0.05cm},
+        \LenToUnit{\paperheight-1.0 cm}
+    ){\vtop{{\null}\makebox[0pt][c]{
+        \small\color{gray}\textit{}\hspace{\widthof{}}
+    }}}%
+  }%
+}%
+
+% save the original href command in a new command:
+\let\hrefWithoutArrow\href
+
+% new command for external links:
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{}
+
+    \placelastupdatedtext
+    \begin{header}
+        \fontsize{30 pt}{30 pt}
+        \textbf{Kevin Synagogue Panjaitan}
+
+        \vspace{0.3 cm}
+
+        \normalsize
+        \mbox{{\footnotesize\faMapMarker*}\hspace*{0.13cm}Muaro Jambi ,Jambi}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{mailto:Kpanjaitan123@gmail.com}{{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}Kpanjaitan123@gmail.com}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{tel:+629602802964}{{\footnotesize\faPhone*}\hspace*{0.13cm}+629602802964}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://www.linkedin.com/in/kevin-panjaitan-612530245}{{\footnotesize\faLinkedinIn}\hspace*{0.13cm}Kevin Panjaitan }}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://github.com/f1c221058}{{\footnotesize\faGithub}\hspace*{0.13cm}f1c221058}}%
+    \end{header}
+
+    \vspace{0.3 cm - 0.3 cm}
+
+
+    \section{Tentang Saya }
+            Sebagai lulusan program studi Matematika dari Universitas Jambi, saya memiliki semangat untuk menerapkan konsep-konsep matematika pada tantangan dunia nyata. Dengan rekam jejak keberhasilan dalam bidang organisasi acara, saya membawa perpaduan unik antara kemampuan analitis, kreativitas, dan perhatian terhadap detail dalam setiap proyek yang saya tangani. Baik saat mengoordinasikan logistik, mengelola anggaran, maupun bekerja sama dengan berbagai pemangku kepentingan, saya berkembang dalam lingkungan yang cepat dan penuh tekanan, serta tetap berkomitmen untuk memberikan hasil yang luar biasa. Saya bersemangat untuk memanfaatkan keterampilan dan pengalaman saya guna berkontribusi pada organisasi yang dinamis dan memberikan dampak positif bagi masyarakat.
+
+
+    
+    \section{Profil Singkat}
+
+\begin{onecolentry}
+    \begin{highlightsforbulletentries}
+
+    \item Lulusan Matematika dari Universitas Jambi dengan minat kuat di bidang Data Science dan Machine Learning.
+    \item Memiliki pengalaman dalam analisis data, pemodelan statistik, serta penggunaan bahasa pemrograman Python dan R.
+    \item Terampil menggunakan pustaka seperti Pandas, NumPy, Scikit-learn, dan TensorFlow untuk pengolahan dan analisis data.
+    \item Mampu mengembangkan model prediktif, melakukan visualisasi data, serta menyampaikan insight yang relevan untuk pengambilan keputusan.
+    \item Berorientasi pada hasil, memiliki kemampuan berpikir analitis yang kuat, dan senang belajar hal baru dalam dunia teknologi data.
+
+    \end{highlightsforbulletentries}
+\end{onecolentry}
+
+
+  \section{Pendidikan}
+
+\begin{threecolentry}{\textbf{S.Mat}}{
+    Sept 2021 – Okt 2025
+}
+    \textbf{Universitas Jambi}, Matematika
+    \begin{highlights}
+        \item IPK: 3.79/4.00 (\textit{Lulus dengan Sangat Memuaskan})
+        \item \textbf{Judul Skripsi:} Peramalan Nilai Tukar Petani Provinsi Jambi Menggunakan Metode Hybrid ARIMA–ANN
+        \item \textbf{Mata Kuliah Utama:} Statistika Matematika, Analisis Real, Metode Numerik, Persamaan Diferensial, Pemodelan Matematika, Data Science
+    \end{highlights}
+\end{threecolentry}
+
+
+
+    
+    \section{Pengalaman}
+
+\begin{twocolentry}{
+    Jambi, Indonesia
+
+    Juli 2024 – Sept 2024
+}
+    \textbf{Badan Pusat Statistik (BPS) Provinsi Jambi}, Magang
+    \begin{highlights}
+        \item Berpartisipasi dalam pengolahan dan analisis data sosial ekonomi Provinsi Jambi menggunakan perangkat lunak statistik
+        \item Membantu tim dalam penyusunan laporan publikasi dan visualisasi data untuk keperluan internal BPS
+        \item Mengembangkan pemahaman tentang metode survei dan manajemen data nasional
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.2 cm}
+
+\begin{twocolentry}{
+    Jambi, Indonesia
+
+    Jan 2023 – Des 2023
+}
+    \textbf{Himpunan Mahasiswa Matematika (HIMATIKA)}, Koordinator Pemberdayaan Sumber Daya Manusia
+    \begin{highlights}
+        \item Menginisiasi dan memimpin program pengembangan soft skill dan pelatihan akademik bagi mahasiswa baru
+        \item Berperan aktif dalam perencanaan strategi penguatan kapasitas anggota himpunan
+        \item Meningkatkan partisipasi anggota melalui kegiatan kolaboratif dan mentoring
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.2 cm}
+
+\begin{twocolentry}{
+    Bandung, Indonesia
+
+    Feb 2024 – Juli 2024
+}
+    \textbf{Institut Teknologi Bandung (ITB)}, Peserta Program Pertukaran Mahasiswa Merdeka
+    \begin{highlights}
+        \item Mengikuti kegiatan akademik dan proyek kolaboratif lintas universitas di bidang matematika terapan
+        \item Beradaptasi dalam lingkungan akademik baru dan memperluas jaringan profesional di tingkat nasional
+        \item Meningkatkan kemampuan komunikasi, penelitian, dan kerja tim lintas disiplin
+    \end{highlights}
+\end{twocolentry}
+
+
+
+    
+   \section{Publikasi}
+
+\begin{samepage}
+    \begin{twocolentry}{
+        Des 2023
+    }
+        \textbf{Analisis Pengangguran Provinsi Jambi Tahun 2018 dan 2019 dengan Metode Uji Tanda}
+
+        \vspace{0.10 cm}
+
+        \mbox{\textbf{\textit{Kevin Synagogue Panjaitan}}}, \mbox{dkk.}
+        \vspace{0.10 cm}
+
+        \href{https://doi.org/10.22437/multiproximity.v1i2.21056}{10.22437/multiproximity.v1i2.21056}
+    \end{twocolentry}
+\end{samepage}
+
+\vspace{0.2 cm}
+
+\begin{samepage}
+    \begin{twocolentry}{
+        Mar 2024
+    }
+        \textbf{Forecasting the Exchange Rate of Farmers in North Sumatera Province Using the Hybrid ARIMA–ANN Method:\\
+        Peramalan Nilai Tukar Petani Provinsi Sumatera Utara Menggunakan Metode Hybrid ARIMA–ANN}
+
+        \vspace{0.10 cm}
+
+        \mbox{\textbf{\textit{Kevin Synagogue Panjaitan}}}, \mbox{dkk.}
+        \vspace{0.10 cm}
+
+        \href{https://doi.org/10.33319/agtek.v26i1.183}{10.33319/agtek.v26i1.183}
+    \end{twocolentry}
+\end{samepage}
+
+\vspace{0.2 cm}
+
+\begin{samepage}
+    \begin{twocolentry}{
+        Okt 2024
+    }
+        \textbf{Prediksi Indeks Harga Konsumen Provinsi Jambi Menggunakan Autoregressive Integrated Moving Average}
+
+        \vspace{0.10 cm}
+
+        \mbox{\textbf{\textit{Kevin Synagogue Panjaitan}}}, \mbox{dkk.}
+        \vspace{0.10 cm}
+
+        \href{https://doi.org/10.22437/multiproximity.v3i1.40361}{10.22437/multiproximity.v3i1.40361}
+    \end{twocolentry}
+\end{samepage}
+
+    
+    \section{Projects}
+
+
+
+        
+        \begin{twocolentry}{
+            \href{https://github.com/sinaatalay/rendercv}{github.com/name/repo}
+        }
+            \textbf{Multi-User Drawing Tool}
+            \begin{highlights}
+                \item Developed an electronic classroom where multiple users can simultaneously view and draw on a "chalkboard" with each person's edits synchronized
+                \item Tools Used: C++, MFC
+            \end{highlights}
+        \end{twocolentry}
+
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            \href{https://github.com/sinaatalay/rendercv}{github.com/name/repo}
+        }
+            \textbf{Synchronized Desktop Calendar}
+            \begin{highlights}
+                \item Developed a desktop calendar with globally shared and synchronized calendars, allowing users to schedule meetings with other users
+                \item Tools Used: C\#, .NET, SQL, XML
+            \end{highlights}
+        \end{twocolentry}
+
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            2002
+        }
+            \textbf{Custom Operating System}
+            \begin{highlights}
+                \item Built a UNIX-style OS with a scheduler, file system, text editor, and calculator
+                \item Tools Used: C
+            \end{highlights}
+        \end{twocolentry}
+
+
+
+    
+    \section{Keahlian Teknis}
+
+\begin{onecolentry}
+    \textbf{Bahasa Pemrograman:} Python, R, MATLAB, SQL, C++
+\end{onecolentry}
+
+\vspace{0.2 cm}
+
+\begin{onecolentry}
+    \textbf{Perangkat dan Teknologi:} Jupyter Notebook, Google Colab, Excel, SPSS, Minitab
+\end{onecolentry}
+
+\vspace{0.2 cm}
+
+\begin{onecolentry}
+    \textbf{Bidang Keahlian:} Analisis Data, Statistik, Machine Learning, Forecasting (ARIMA, ANN), Pemodelan Matematika, Visualisasi Data
+\end{onecolentry}
+
+
+
+    
+
+\end{document}
